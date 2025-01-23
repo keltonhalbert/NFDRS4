@@ -14,7 +14,7 @@ endif()
 # Build options
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_DEMOS "Build demos" OFF)
-option(BUILD_STATIC "Build a copy of statically compiled library" OFF)
+option(BUILD_STATIC "Build a copy of statically compiled library" ON)
 
 # Compiler options
 set(CMAKE_CXX_STANDARD 98)
