@@ -208,6 +208,10 @@ int main(int argc, char* argv[]) {
                                        fw21Rec.GetMxWood(), fw21Rec.GetMxHerb(),
                                        fw21Rec.GetFuelTTempC());
             double tSC, tERC, tBI, tIC;
+            // Why on earth are we passing pointers to doubles, filling the
+            // values, from iCalcIndexes, and then assigning them to the NFDRS4
+            // object?? Either make the class contain and store the value or
+            // dont? There's no need for this workflow.
             fw21Calc.iCalcIndexes(fw21Rec.GetWindSpeed(),
                                   params.getSlopeClass(), &tSC, &tERC, &tBI,
                                   &tIC, fw21Rec.GetGSI(), fw21Rec.GetKBDI());
