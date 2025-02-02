@@ -2725,7 +2725,7 @@ ConfigurationImpl::lookupMemorySizeMB(
 	const char *		strValue;
 	int					result;
 
-	sprintf(defaultStrValue, sizeof(defaultStrValue), "%d MB", defaultVal);
+	snprintf(defaultStrValue, sizeof(defaultStrValue), "%d MB", defaultVal);
 	strValue = lookupString(scope, localName, defaultStrValue);
 	result = stringToMemorySizeMB(scope, localName, strValue);
 	return result;
