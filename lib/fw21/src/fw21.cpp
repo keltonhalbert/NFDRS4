@@ -120,7 +120,7 @@ string CFW21Data::DateToOriginal(TM inTm, int tzOffset)
 		tm lTime = inTm;
 		//tm_increment_hour(&lTime, m_timeZoneOffset);
 		tm_decrement_hour(&lTime, tzOffset);
-		sprintf(buf, "%04d%02d%02dT%02d%02d%02dZ", lTime.tm_year, lTime.tm_mon + 1, lTime.tm_mday, lTime.tm_hour,
+		snprintf(buf, sizeof(buf), "%04d%02d%02dT%02d%02d%02dZ", lTime.tm_year, lTime.tm_mon + 1, lTime.tm_mday, lTime.tm_hour,
 			lTime.tm_min, lTime.tm_sec);
 		string ret = buf;
 		return ret;
@@ -129,7 +129,7 @@ string CFW21Data::DateToOriginal(TM inTm, int tzOffset)
 	{	
 		//output in local time
 		char buf[64];
-		sprintf(buf, "%04d%02d%02dT%02d%02d%02d%+03d:00", inTm.tm_year + 1900, inTm.tm_mon + 1,
+		snprintf(buf, sizeof(buf), "%04d%02d%02dT%02d%02d%02d%+03d:00", inTm.tm_year + 1900, inTm.tm_mon + 1,
 			inTm.tm_mday, inTm.tm_hour, inTm.tm_min, inTm.tm_sec, tzOffset);
 		string ret = buf;
 		return ret;
@@ -753,11 +753,11 @@ string FormatTM(TM in, int offsetHours)
 	char buf[64];
 	string ret = "";
 	if(offsetHours < 0)
-		sprintf(buf, "%4d-%02d-%02dT%02d:%02d:00%03d:00",
+		snprintf(buf, sizeof(buf), "%4d-%02d-%02dT%02d:%02d:00%03d:00",
 			in.tm_year + 1900, in.tm_mon + 1, in.tm_mday,
 			in.tm_hour, in.tm_min, offsetHours);
 	else
-		sprintf(buf, "%4d-%02d-%02dT%02d:%02d:00%02d:00",
+		snprintf(buf, sizeof(buf), "%4d-%02d-%02dT%02d:%02d:00%02d:00",
 			in.tm_year + 1900, in.tm_mon + 1, in.tm_mday,
 			in.tm_hour, in.tm_min, offsetHours);
 
