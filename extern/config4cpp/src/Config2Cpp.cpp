@@ -663,7 +663,7 @@ stringConcat(const char * s1, const char * s2, const char * s3)
 
 	len = strlen(s1) + strlen(s2) + strlen(s3);
 	result = new char[len + 1];
-	sprintf(result, "%s%s%s", s1, s2, s3);
+	snprintf(result, len+1, "%s%s%s", s1, s2, s3);
 	return result;
 }
 

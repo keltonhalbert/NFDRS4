@@ -139,7 +139,7 @@ UidIdentifierProcessor::expandOne(StringBuffer & spelling)
 		// "uid-foo"  --> "uid-<digits>-foo"
 		//--------
 		assert(m_count < 1000 * 1000 * 1000);
-		sprintf(digits, "%09ld", m_count);
+		snprintf(digits, sizeof(digits), "%09ld", m_count);
 		m_count ++;
 		suffix = &(spelling.c_str()[4]); // deep copy
 		spelling.empty();
@@ -172,7 +172,7 @@ UidIdentifierProcessor::expandOne(StringBuffer & spelling)
 		throw ConfigurationException(msg.c_str());
 	}
 	assert(m_count < 1000 * 1000 * 1000);
-	sprintf(digits, "%09ld", m_count);
+	snprintf(digits, sizeof(digits), "%09ld", m_count);
 	m_count ++;
 	suffix = ptr; // deep copy just after "uid-<digits>-"
 	spelling.empty();
