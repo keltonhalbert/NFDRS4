@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 3.13)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set(CMAKE_CXX_STANDARD 17 CACHE STRING "C++ version selection")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static libraries" FORCE)
 
