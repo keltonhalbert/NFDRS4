@@ -1,0 +1,11 @@
+
+stages: 
+  - security
+
+sast:
+  stage: security
+  variables:
+    SAST_EXCLUDED_PATHS: "build, doc, docs, tests, examples, swig"
+
+include:
+  - template: Security/SAST.gitlab-ci.yml
