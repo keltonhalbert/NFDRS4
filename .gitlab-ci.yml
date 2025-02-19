@@ -22,8 +22,11 @@ include:
     - git submodule update --init --recursive
   parallel:
     matrix:
-      - CPP_COMPILER: [g++, clang++]
-      - C_COMPILER: [gcc, clang]
+      - CPP_COMPILER: g++
+        C_COMPILER: gcc
+
+      - CPP_COMPILER: clang++
+        C_COMPILER: clang
 
 ## The CMake build step
 build-linux:
