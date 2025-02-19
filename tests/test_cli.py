@@ -53,9 +53,18 @@ def main():
     df_compare_indices = df_known_indices.compare(df_unknown_indices)
     df_compare_moisture = df_known_moisture.compare(df_unknown_moisture)
 
-    assert (df_compare_all.empty)
-    assert (df_compare_indices.empty)
-    assert (df_compare_moisture.empty)
+    print("Testing the NFDRS indices output")
+    assert (df_compare_indices.empty), "Output differs from testing data.\n"
+    "{df_compare_indices}"
+
+    print("Teting the NFDRS fuel moisture output")
+    assert (df_compare_moisture.empty), "Output differs from testing data.\n"
+    f"{df_compare_moisture}"
+
+    print("Testing the CSV with all combined data present")
+    assert (df_compare_all.empty), "Output differs from testing data.\n"
+    f"{df_compare_all}"
+
     print("All tests passed!")
 
 
