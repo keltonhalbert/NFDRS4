@@ -5,7 +5,7 @@ stages:
   - test
 
 variables:
-  BUILD_DIR: "buid_${COMPILER}"
+  BUILD_DIR: "build_${COMPILER}"
   CMAKE_BUILD_OPTIONS: "-j 4"
 
 include:
@@ -33,7 +33,7 @@ build-linux:
     - cmake -B ${BUILD_DIR} . -DCMAKE_CXX_COMPILER=$COMPILER
     - cmake --build ${BUILD_DIR} $CMAKE_BUILD_OPTIONS 
   artifacts:
-    expire_in: 5 mins
+    expire_in: 15 mins
     paths:
       - ${BUILD_DIR}
 
@@ -43,7 +43,7 @@ test-linux:
   script:
     - echo "TESTING $COMPILER"
     - cd tests
-    - python3 test_cli.py --bin-dir ${BUILD_DIR}/bin
+    - python3 test_cli.py --bin-dir ../${BUILD_DIR}/bin
 
 sast:
   stage: security
