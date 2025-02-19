@@ -1,18 +1,21 @@
 import pandas as pd
+import argparse
 import os
 
-def run_nfdrs_cli(): 
+
+def run_nfdrs_cli(dir):
     """
     Run the NFDRS4 CLI on the testing data.
-    Must be run from the $PROJECT_ROOT/tests 
+    Must be run from the $PROJECT_ROOT/tests
     directory.
     """
     print("Running the NFDRS CLI")
-    os.system("../build/bin/NFDRS4_cli ./RunNFDRSSample.cfg")
+    os.system(f"{dir}/NFDRS4_cli ./RunNFDRSSample.cfg")
+
 
 def load_known():
     """
-    Load the known values from the NFDRS4 CLI 
+    Load the known values from the NFDRS4 CLI
     output and return the Pandas dataframes.
     """
     df_all = pd.read_csv("./data/KnownValue-NFDRSOutput.csv")
@@ -21,11 +24,12 @@ def load_known():
 
     return df_moisture, df_indices, df_all
 
+
 def load_unknown():
     """
     Load the unverified data we will be testing
-    against the known values from the NFDRS4 
-    CLI. 
+    against the known values from the NFDRS4
+    CLI.
     """
     df_all = pd.read_csv("./NFDRSOutput.csv")
     df_indices = pd.read_csv("./NFDRSIndexes.csv")
@@ -33,8 +37,14 @@ def load_unknown():
 
     return df_moisture, df_indices, df_all
 
+
 def main():
-    run_nfdrs_cli()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--bin-dir", type=str)
+    args = parser.parse_args()
+
+    run_nfdrs_cli(args.bin_dir)
 
     df_known_moisture, df_known_indices, df_known_all = load_known()
     df_unknown_moisture, df_unknown_indices, df_unknown_all = load_unknown()
@@ -43,10 +53,11 @@ def main():
     df_compare_indices = df_known_indices.compare(df_unknown_indices)
     df_compare_moisture = df_known_moisture.compare(df_unknown_moisture)
 
-    assert(df_compare_all.empty)
-    assert(df_compare_indices.empty)
-    assert(df_compare_moisture.empty)
+    assert (df_compare_all.empty)
+    assert (df_compare_indices.empty)
+    assert (df_compare_moisture.empty)
     print("All tests passed!")
+
 
 if __name__ == "__main__":
     main()

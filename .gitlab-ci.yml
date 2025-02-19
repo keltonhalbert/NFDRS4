@@ -42,8 +42,8 @@ test-linux:
   stage: test
   script:
     - echo "TESTING $COMPILER"
-    - cd ${BUILD_DIR}
-    - python3 test_cli.py
+    - cd tests
+    - python3 test_cli.py --bin-dir ${BUILD_DIR}/bin
 
 sast:
   stage: security
