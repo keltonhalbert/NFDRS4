@@ -44,6 +44,12 @@ test-linux:
     - echo "TESTING $COMPILER"
     - cd tests
     - python3 test_cli.py --bin-dir ../${BUILD_DIR}/bin
+  artifacts:
+    expires_in: 10 days
+    paths:
+      - NFDRSOutput.csv
+      - NFDRSIndexes.csv
+      - NFDRSMoistures.csv
 
 sast:
   stage: security
