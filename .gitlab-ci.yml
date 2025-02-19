@@ -22,7 +22,7 @@ include:
     - git submodule update --init --recursive
   parallel:
     matrix:
-      - COMPILER: [g++]
+      - COMPILER: [g++, clang++]
 
 ## The CMake build step
 build-linux:
@@ -30,7 +30,7 @@ build-linux:
   stage: build
   script:
     - echo "BUILDING $COMPILER"
-    - cmake -B ${BUILD_DIR} . -DCMAKE_CXX_COMPILER=$COMPILER
+    - cmake -B ${BUILD_DIR} . -DCMAKE_CXX_COMPILER=$COMPILER -DCMAKE_C_COMPILER=$COMPILER
     - cmake --build ${BUILD_DIR} $CMAKE_BUILD_OPTIONS 
   artifacts:
     expire_in: 15 mins
