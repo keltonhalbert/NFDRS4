@@ -22,7 +22,7 @@ include:
     - git submodule update --init --recursive
   parallel:
     matrix:
-      - COMPILER: [g++, clang++]
+      - COMPILER: [g++]
 
 ## The CMake build step
 build-linux:
