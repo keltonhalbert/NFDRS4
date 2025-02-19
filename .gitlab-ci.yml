@@ -43,7 +43,7 @@ test-linux:
   script:
     - echo "TESTING $COMPILER"
     - cd ${BUILD_DIR}
-    - python test_cli.py
+    - python3 test_cli.py
 
 sast:
   stage: security
