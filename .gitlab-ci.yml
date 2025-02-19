@@ -17,7 +17,8 @@ include:
 .parallel-linux:
   image: redhat/ubi8
   before_script:
-    - dnf update -y && dnf install -y cmake make gcc gcc-c++ clang git python3 && pip install pandas
+    - dnf update -y && dnf install -y cmake make gcc gcc-c++ clang git python3 
+    - pip install pandas
     - git submodule update --init --recursive
   parallel:
     matrix:
