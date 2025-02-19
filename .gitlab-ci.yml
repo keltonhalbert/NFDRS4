@@ -47,9 +47,9 @@ test-linux:
   artifacts:
     expire_in: 10 days
     paths:
-      - NFDRSOutput.csv
-      - NFDRSIndexes.csv
-      - NFDRSMoistures.csv
+      - tests/NFDRSOutput.csv
+      - tests/NFDRSIndexes.csv
+      - tests/NFDRSMoistures.csv
 
 sast:
   stage: security
