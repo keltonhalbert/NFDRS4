@@ -17,7 +17,7 @@ include:
 .parallel-linux:
   image: redhat/ubi8
   before_script:
-    - dnf update -y && dnf install -y cmake make gcc gcc-c++ clang git python3 
+    - dnf update -y && dnf install -y zlib zlib-devel cmake make gcc gcc-c++ clang git python3 
     - git submodule update --init --recursive
   parallel:
     matrix:
@@ -44,16 +44,19 @@ test-linux:
   extends: .parallel-linux
   stage: test
   script:
-    - python3 -m pip install pandas
+    - python3 -m pip install -U --force-reinstall pip
+    - python3 -m pip install pandas matplotlib
     - echo "TESTING $CPP_COMPILER"
     - cd tests
     - python3 test_cli.py --bin-dir ../${BUILD_DIR}/bin
   artifacts:
     expire_in: 10 days
+    when: always
     paths:
       - tests/NFDRSOutput.csv
       - tests/NFDRSIndexes.csv
       - tests/NFDRSMoistures.csv
+      - tests/*.png
 
 sast:
   stage: security
