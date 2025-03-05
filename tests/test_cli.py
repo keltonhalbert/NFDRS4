@@ -140,9 +140,17 @@ def plot_erc_percentiles(df_known, df_test):
     date_time = daily_mean_known.index
 
     ax.plot(
-        date_time, daily_mean_known["percentile"].values, 'k-', label="Operational NFDRS4")
+        date_time,
+        daily_mean_known["percentile"].values,
+        'k-',
+        label="Operational NFDRS4"
+    )
     ax.plot(
-        date_time, daily_mean_test["percentile"].values, 'r-', label="Modified NFDRS4")
+        date_time,
+        daily_mean_test["percentile"].values,
+        'r-',
+        label="Modified NFDRS4"
+    )
     ax.set_ylabel("")
     ax.set_xlabel("Day of Year")
     ax.legend(loc="upper right")
@@ -215,8 +223,6 @@ def main():
     plot_derived_diff("ERC", df_known_indices, df_unknown_indices)
     plot_derived_diff("KBDI", df_known_indices, df_unknown_indices)
 
-    plot_erc_percentiles(df_known_indices, df_unknown_indices)
-
     plot_daily_mean_DFM("1HourDFM(%)", df_known_moisture,
                         df_unknown_moisture)
     plot_daily_mean_DFM("10HourDFM(%)", df_known_moisture,
@@ -225,6 +231,9 @@ def main():
                         df_unknown_moisture)
     plot_daily_mean_DFM("1000HourDFM(%)", df_known_moisture,
                         df_unknown_moisture)
+
+    # Broken for now due to old scipy version behavior
+    # plot_erc_percentiles(df_known_indices, df_unknown_indices)
 
     df_compare_all = df_known_all.compare(df_unknown_all)
     df_compare_indices = df_known_indices.compare(df_unknown_indices)
