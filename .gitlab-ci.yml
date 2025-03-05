@@ -45,7 +45,7 @@ test-linux:
   stage: test
   script:
     - python3 -m pip install -U --force-reinstall pip
-    - python3 -m pip install pandas matplotlib
+    - python3 -m pip install pandas scipy matplotlib
     - echo "TESTING $CPP_COMPILER"
     - cd tests
     - python3 test_cli.py --bin-dir ../${BUILD_DIR}/bin
