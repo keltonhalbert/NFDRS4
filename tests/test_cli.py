@@ -1,3 +1,4 @@
+from scipy.stats import percentileofscore
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import pandas as pd
@@ -25,15 +26,15 @@ def load_known():
     df_all = pd.read_csv(
         "./data/KnownValue-NFDRSOutput.csv",
         parse_dates=["DateTime"]
-    )
+    ).set_index(["DateTime"])
     df_indices = pd.read_csv(
         "./data/KnownValue-NFDRSIndexes.csv",
         parse_dates=["DateTime"]
-    )
+    ).set_index(["DateTime"])
     df_moisture = pd.read_csv(
         "./data/KnownValue-NFDRSMoistures.csv",
         parse_dates=["DateTime"]
-    )
+    ).set_index(["DateTime"])
 
     return df_moisture, df_indices, df_all
 
@@ -47,15 +48,15 @@ def load_unknown():
     df_all = pd.read_csv(
         "./NFDRSOutput.csv",
         parse_dates=["DateTime"]
-    )
+    ).set_index(["DateTime"])
     df_indices = pd.read_csv(
         "./NFDRSIndexes.csv",
         parse_dates=["DateTime"]
-    )
+    ).set_index(["DateTime"])
     df_moisture = pd.read_csv(
         "./NFDRSMoistures.csv",
         parse_dates=["DateTime"]
-    )
+    ).set_index(["DateTime"])
 
     return df_moisture, df_indices, df_all
 
@@ -81,7 +82,7 @@ def plot_dfm_diff(key, df_known, df_test):
     ylabel_str = ylabel_dict[key] + "(tested value - known value)"
     fig, ax = plt.subplots(figsize=(16, 9), dpi=200)
 
-    date_time = df_known["DateTime"]
+    date_time = df_known.index
     known_dfm = df_known[key]
     test_dfm = df_test[key]
 
@@ -108,7 +109,7 @@ def plot_derived_diff(key, df_known, df_test):
     ylabel_str = ylabel_dict[key] + "(tested value - known value)"
     fig, ax = plt.subplots(figsize=(16, 9), dpi=200)
 
-    date_time = df_known["DateTime"]
+    date_time = df_known.index
     known_dfm = df_known[key]
     test_dfm = df_test[key]
 
@@ -118,6 +119,77 @@ def plot_derived_diff(key, df_known, df_test):
     ax.set_xlabel("Period of Record")
 
     plt.savefig(f"{key}_comparison.png", bbox_inches="tight")
+
+
+def plot_erc_percentiles(df_known, df_test):
+    """
+    Plot the ERC percentiles for the given
+    test data.
+    """
+    fig, ax = plt.subplots(figsize=(16, 9), dpi=200)
+    df_known["day_of_year"] = df_known.index.dayofyear
+    df_test["day_of_year"] = df_test.index.dayofyear
+
+    df_known["percentile"] = percentileofscore(
+        df_known["ERC"], df_known["ERC"])
+    df_test["percentile"] = percentileofscore(
+        df_test["ERC"], df_test["ERC"])
+
+    daily_mean_known = df_known.groupby("day_of_year").mean()
+    daily_mean_test = df_test.groupby("day_of_year").mean()
+    date_time = daily_mean_known.index
+
+    ax.plot(
+        date_time, daily_mean_known["percentile"].values, 'k-', label="Operational NFDRS4")
+    ax.plot(
+        date_time, daily_mean_test["percentile"].values, 'r-', label="Modified NFDRS4")
+    ax.set_ylabel("")
+    ax.set_xlabel("Day of Year")
+    ax.legend(loc="upper right")
+    plt.savefig("erc_percentiles.png", bbox_inches="tight")
+
+    df_known.drop(columns=["day_of_year", "percentile"], inplace=True)
+    df_test.drop(columns=["day_of_year", "percentile"], inplace=True)
+
+
+def plot_daily_mean_DFM(key, df_known, df_test):
+    """
+    Generate plots of daily averaged dead fuel moisture
+    for the 15 year period of record.
+    """
+    ylabel_dict = {
+        "1HourDFM(%)": "1-Hour Daily Mean Dead Fuel Moisture (%)\n",
+        "10HourDFM(%)": "10-Hour Daily Mean Dead Fuel Moisture (%)\n",
+        "100HourDFM(%)": "100-Hour Daily Mean Dead Fuel Moisture (%)\n",
+        "1000HourDFM(%)": "1000-Hour Daily Mean Dead Fuel Moisture (%)\n",
+    }
+    outname_dict = {
+        "1HourDFM(%)": "1hour",
+        "10HourDFM(%)": "10hour",
+        "100HourDFM(%)": "100hour",
+        "1000HourDFM(%)": "1000hour",
+    }
+    fig, ax = plt.subplots(figsize=(16, 9), dpi=200)
+    df_known["day_of_year"] = df_known.index.dayofyear
+    df_test["day_of_year"] = df_test.index.dayofyear
+
+    daily_mean_known = df_known.groupby("day_of_year").mean()
+    daily_mean_test = df_test.groupby("day_of_year").mean()
+    date_time = daily_mean_known.index
+
+    ax.plot(date_time, daily_mean_known[key].values,
+            'k-', label="Operational NFDRS4")
+    ax.plot(date_time, daily_mean_test[key].values,
+            'g-', label="Modified NFDRS4")
+
+    ax.set_ylabel(ylabel_dict[key])
+    ax.set_xlabel("Day of Year")
+    ax.set_title(f"Lolo Natl. Forest 2001-2018\n{ylabel_dict[key]}")
+    ax.legend(loc="upper right")
+    plt.savefig(f"{outname_dict[key]}_dailymean.png", bbox_inches="tight")
+
+    df_known.drop(columns=["day_of_year"], inplace=True)
+    df_test.drop(columns=["day_of_year"], inplace=True)
 
 
 def main():
@@ -142,6 +214,17 @@ def main():
     plot_derived_diff("BI", df_known_indices, df_unknown_indices)
     plot_derived_diff("ERC", df_known_indices, df_unknown_indices)
     plot_derived_diff("KBDI", df_known_indices, df_unknown_indices)
+
+    plot_erc_percentiles(df_known_indices, df_unknown_indices)
+
+    plot_daily_mean_DFM("1HourDFM(%)", df_known_moisture,
+                        df_unknown_moisture)
+    plot_daily_mean_DFM("10HourDFM(%)", df_known_moisture,
+                        df_unknown_moisture)
+    plot_daily_mean_DFM("100HourDFM(%)", df_known_moisture,
+                        df_unknown_moisture)
+    plot_daily_mean_DFM("1000HourDFM(%)", df_known_moisture,
+                        df_unknown_moisture)
 
     df_compare_all = df_known_all.compare(df_unknown_all)
     df_compare_indices = df_known_indices.compare(df_unknown_indices)
