@@ -126,38 +126,52 @@ def plot_erc_percentiles(df_known, df_test):
     Plot the ERC percentiles for the given
     test data.
     """
-    fig, ax = plt.subplots(figsize=(16, 9), dpi=200)
     df_known["day_of_year"] = df_known.index.dayofyear
     df_test["day_of_year"] = df_test.index.dayofyear
-
-    df_known["percentile"] = percentileofscore(
-        df_known["ERC"], df_known["ERC"])
-    df_test["percentile"] = percentileofscore(
-        df_test["ERC"], df_test["ERC"])
 
     daily_mean_known = df_known.groupby("day_of_year").mean()
     daily_mean_test = df_test.groupby("day_of_year").mean()
     date_time = daily_mean_known.index
 
+    known_erc_percentile = percentileofscore(
+        df_known["ERC"],
+        daily_mean_known["ERC"]
+    )
+    test_erc_percentile = percentileofscore(
+        df_test["ERC"],
+        daily_mean_test["ERC"]
+    )
+    test_erc_percentile_knownclimo = percentileofscore(
+        df_test["ERC"],
+        daily_mean_known["ERC"]
+    )
+
+    fig, ax = plt.subplots(figsize=(16, 9), dpi=200)
     ax.plot(
         date_time,
-        daily_mean_known["percentile"].values,
+        known_erc_percentile,
         'k-',
         label="Operational NFDRS4"
     )
     ax.plot(
         date_time,
-        daily_mean_test["percentile"].values,
+        test_erc_percentile,
         'r-',
         label="Modified NFDRS4"
+    )
+    ax.plot(
+        date_time,
+        test_erc_percentile_knownclimo,
+        'r:',
+        label="Modified NFDRS4 w/ Operational Climo"
     )
     ax.set_ylabel("")
     ax.set_xlabel("Day of Year")
     ax.legend(loc="upper right")
     plt.savefig("erc_percentiles.png", bbox_inches="tight")
 
-    df_known.drop(columns=["day_of_year", "percentile"], inplace=True)
-    df_test.drop(columns=["day_of_year", "percentile"], inplace=True)
+    df_known.drop(columns=["day_of_year"], inplace=True)
+    df_test.drop(columns=["day_of_year"], inplace=True)
 
 
 def plot_daily_mean_DFM(key, df_known, df_test):
@@ -200,6 +214,29 @@ def plot_daily_mean_DFM(key, df_known, df_test):
     df_test.drop(columns=["day_of_year"], inplace=True)
 
 
+def plot_raw_erc(df_known, df_test):
+    fig, ax = plt.subplots(figsize=(16, 9), dpi=200)
+
+    date_time = df_known.index
+
+    ax.plot(
+        date_time,
+        df_known["ERC"],
+        'k-',
+        label="Operational NFDRS4"
+    )
+    ax.plot(
+        date_time,
+        df_test["ERC"],
+        'r-',
+        label="Modified NFDRS4"
+    )
+    ax.set_ylabel("")
+    ax.set_xlabel("Day of Year")
+    ax.legend(loc="upper right")
+    plt.savefig("raw_erc.png", bbox_inches="tight")
+
+
 def main():
 
     parser = argparse.ArgumentParser()
@@ -233,7 +270,8 @@ def main():
                         df_unknown_moisture)
 
     # Broken for now due to old scipy version behavior
-    # plot_erc_percentiles(df_known_indices, df_unknown_indices)
+    plot_raw_erc(df_known_indices, df_unknown_indices)
+    plot_erc_percentiles(df_known_indices, df_unknown_indices)
 
     df_compare_all = df_known_all.compare(df_unknown_all)
     df_compare_indices = df_known_indices.compare(df_unknown_indices)
