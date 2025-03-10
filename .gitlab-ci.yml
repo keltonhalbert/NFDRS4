@@ -17,7 +17,7 @@ include:
 .parallel-linux:
   image: redhat/ubi8
   before_script:
-    - dnf update -y && dnf install -y zlib zlib-devel cmake make gcc gcc-c++ clang git python3 
+    - dnf update -y && dnf install -y zlib zlib-devel cmake make gcc gcc-c++ clang git python39 
     - git submodule update --init --recursive
   parallel:
     matrix:
