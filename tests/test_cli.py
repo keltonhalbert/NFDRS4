@@ -142,8 +142,8 @@ def plot_erc_percentiles(df_known, df_test):
         daily_mean_test["ERC"]
     )
     test_erc_percentile_knownclimo = percentileofscore(
-        df_test["ERC"],
-        daily_mean_known["ERC"]
+        df_known["ERC"],
+        daily_mean_test["ERC"]
     )
 
     fig, ax = plt.subplots(figsize=(16, 9), dpi=200)
