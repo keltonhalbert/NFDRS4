@@ -165,8 +165,11 @@ def plot_erc_percentiles(df_known, df_test):
         'r:',
         label="Modified NFDRS4 w/ Operational Climo"
     )
-    ax.set_ylabel("")
+    ax.set_title("Daily Mean ERC Percentiles\nLolo Natl. Forest 2001-2018")
+    ax.set_ylabel("ERC Percentile")
     ax.set_xlabel("Day of Year")
+    ax.set_ylim(0, 100)
+    ax.grid()
     ax.legend(loc="upper right")
     plt.savefig("erc_percentiles.png", bbox_inches="tight")
 
@@ -207,6 +210,8 @@ def plot_daily_mean_DFM(key, df_known, df_test):
     ax.set_ylabel(ylabel_dict[key])
     ax.set_xlabel("Day of Year")
     ax.set_title(f"Lolo Natl. Forest 2001-2018\n{ylabel_dict[key]}")
+    ax.set_ylim(5, 40)
+    ax.grid()
     ax.legend(loc="upper right")
     plt.savefig(f"{outname_dict[key]}_dailymean.png", bbox_inches="tight")
 
@@ -231,8 +236,11 @@ def plot_raw_erc(df_known, df_test):
         'r-',
         label="Modified NFDRS4"
     )
-    ax.set_ylabel("")
+    ax.set_title("Computed ERC Values\nLolo Natl. Forest 2001-2018")
+    ax.set_ylabel("ERC Value")
     ax.set_xlabel("Day of Year")
+    ax.set_ylim(-5, 70)
+    ax.grid()
     ax.legend(loc="upper right")
     plt.savefig("raw_erc.png", bbox_inches="tight")
 
